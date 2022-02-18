@@ -7,7 +7,7 @@ This is a Notepad made with Python3 and [tkinter library](https://docs.python.or
 
 ## Release
 
-*Wait for it*
+[Download the first version][release]
 
 ## Download with git
 
@@ -63,5 +63,5 @@ pyinstaller.exe --onefile --windowed --icon='assets\favicon.ico' Notepad.py
 
 I was inspired by this code from [code with Harry](https://www.codewithharry.com/videos/python-gui-tkinter-hindi-29).
 
-
 [venv-guide]: https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment
+[release]: https://github.com/Baelfire18/Notepad/releases/latest/download/Notepad.zip
