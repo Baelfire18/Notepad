@@ -1,7 +1,12 @@
 from tkinter import Tk, Text, Menu, Scrollbar, BOTH, RIGHT, END, Y
 from tkinter.messagebox import showinfo
-from tkinter.filedialog import askopenfilename
+from tkinter.filedialog import askopenfilename, asksaveasfile
 import os
+
+FILE_OPTIONS = {
+    "defaultextension": ".txt",
+    "filetypes": [("All files", "*.*"), ("Text Documents", "*.txt")],
+}
 
 
 class NotePad(Tk):
@@ -14,12 +19,20 @@ class NotePad(Tk):
         self.__text_area__()
         self.__init_menu__()
         self.__init_scrollbar__()
+        self.__init_shortcuts__()
+
         self.mainloop()
 
     # Add self.text_area
     def __text_area__(self):
         self.text_area = Text(self, font="lucida 13")
         self.text_area.pack(expand=True, fill=BOTH)
+
+    # Add shortcuts
+    def __init_shortcuts__(self):
+        # self.bind('<KeyPress>', self.save_file)
+        self.bind("<Control-s>", self.save_file)
+        self.bind("<Command-s>", self.save_file)
 
     # Lets create a menu_bar
     def __init_menu__(self):
@@ -41,6 +54,8 @@ class NotePad(Tk):
 
         # To save the current file
         file_menu.add_command(label="Save", command=self.save_file)
+        # To save the current file
+        file_menu.add_command(label="Save As...", command=self.save_file_as)
         file_menu.add_separator()
 
         # To exit the current file
@@ -78,10 +93,7 @@ class NotePad(Tk):
         self.text_area.delete(1.0, END)
 
     def open_file(self):
-        self.file = askopenfilename(
-            defaultextension=".txt",
-            filetypes=[("All files", "*.*"), ("Text Documents", "*.txt")],
-        )
+        self.file = askopenfilename(**FILE_OPTIONS)
         if not self.file:
             self.file = None
         else:
@@ -90,27 +102,27 @@ class NotePad(Tk):
             with open(self.file, "r", encoding="UTF-8") as file:
                 self.text_area.insert(1.0, file.read())
 
-    def save_file(self):
+    def save_file(self, event=None):
         if self.file is None:
-            self.file = askopenfilename(
-                initialfile="Untitled.txt",
-                defaultextension=".txt",
-                filetypes=[("All files", "*.*"), ("Text Documents", "*.txt")],
-            )
-
-            if not self.file:
-                self.file = None
-            else:
-                # Save as a new file
-                with open(self.file, "w", encoding="UTF-8") as file:
-                    file.write(self.text_area.get(1.0, END))
-
-                self.title(os.path.basename(self.file) + "- Notepad")
-                print("File Saved")
+            self.save_file_as()
         else:
             # Save the file
             with open(self.file, "w", encoding="UTF-8") as file:
                 file.write(self.text_area.get(1.0, END))
+            print("File Saved")
+
+    def save_file_as(self):
+        self.file = asksaveasfile(initialfile="Untitled.txt", **FILE_OPTIONS)
+        if not self.file:
+            self.file = None
+        else:
+            # Save as a new file
+            self.file = self.file.name
+            with open(self.file, "w", encoding="UTF-8") as file:
+                file.write(self.text_area.get(1.0, END))
+
+            self.title(os.path.basename(self.file) + "- Notepad")
+            print("New File Saved")
 
     def quit_app(self):
         self.destroy()

@@ -25,16 +25,16 @@ cd Notepad
 In Windows:
 
 ```cmd
-py -m venv .env
-.env\Scripts\activate
+py -m venv env
+env\Scripts\activate
 ```
 
 In macOS and Linux:
 
 ```shell
-python3 -m venv .env
-source .env/bin/activate  # in bash/zsh
-. .env/bin/activate.fish  # in fish
+python3 -m venv env
+source env/bin/activate  # in bash/zsh
+. env/bin/activate.fish  # in fish
 ```
 
 ### Dowload dependecies
